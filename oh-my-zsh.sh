@@ -16,7 +16,7 @@ autoload -U compaudit compinit
 # Set ZSH_CUSTOM to the path where your custom config files
 # and plugins exists, or else we will use the default custom/
 if [[ -z "$ZSH_CUSTOM" ]]; then
-    ZSH_CUSTOM="$ZSH/custom"
+  ZSH_CUSTOM="$ZSH/custom"
 fi
 
 # Set ZSH_CACHE_DIR to the path where cache files should be created
@@ -39,14 +39,14 @@ is_plugin() {
   local base_dir=$1
   local name=$2
   test -f $base_dir/plugins/$name/$name.plugin.zsh \
-    || test -f $base_dir/plugins/$name/_$name
+  || test -f $base_dir/plugins/$name/_$name
 }
 # Add all defined plugins to fpath. This must be done
 # before running compinit.
 for plugin ($plugins); do
   if is_plugin $ZSH_CUSTOM $plugin; then
     fpath=($ZSH_CUSTOM/plugins/$plugin $fpath)
-  elif is_plugin $ZSH $plugin; then
+    elif is_plugin $ZSH $plugin; then
     fpath=($ZSH/plugins/$plugin $fpath)
   fi
 done
@@ -69,7 +69,7 @@ if [[ $ZSH_DISABLE_COMPFIX != true ]]; then
   if ! compaudit &>/dev/null; then
     # This function resides in the "lib/compfix.zsh" script sourced above.
     handle_completion_insecurities
-  # Else, enable and cache completions to the desired file.
+    # Else, enable and cache completions to the desired file.
   else
     compinit -d "${ZSH_COMPDUMP}"
   fi
@@ -81,7 +81,7 @@ fi
 for plugin ($plugins); do
   if [ -f $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh ]; then
     source $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh
-  elif [ -f $ZSH/plugins/$plugin/$plugin.plugin.zsh ]; then
+    elif [ -f $ZSH/plugins/$plugin/$plugin.plugin.zsh ]; then
     source $ZSH/plugins/$plugin/$plugin.plugin.zsh
   fi
 done
@@ -93,14 +93,33 @@ done
 unset config_file
 
 # Load the theme
-if [ "$ZSH_THEME" = "random" ]; then
-  themes=($ZSH/themes/*zsh-theme)
+# if [ "$ZSH_THEME" = "random" ]; then
+#   themes=($ZSH/themes/*zsh-theme)
+#   N=${#themes[@]}
+#   ((N=(RANDOM%N)+1))
+#   RANDOM_THEME=${themes[$N]}
+#   source "$RANDOM_THEME"
+#   echo "[oh-my-zsh] Random theme '$RANDOM_THEME' loaded..."
+# else
+#   if [ ! "$ZSH_THEME" = ""  ]; then
+#     if [ -f "$ZSH_CUSTOM/$ZSH_THEME.zsh-theme" ]; then
+#       source "$ZSH_CUSTOM/$ZSH_THEME.zsh-theme"
+#       elif [ -f "$ZSH_CUSTOM/themes/$ZSH_THEME.zsh-theme" ]; then
+#       source "$ZSH_CUSTOM/themes/$ZSH_THEME.zsh-theme"
+#     else
+#       source "$ZSH/themes/$ZSH_THEME.zsh-theme"
+#     fi
+#   fi
+# fi
+
+# ZSH_THEME_RANDOM_CANDIDATES=( jtriley simple sorin fino agnoster jispwoso tjkirch macovsky ys wezm theunraveler sunrise funky cloud bureau agnoster wezm+ )
+
+if [ "${(t)ZSH_THEME_RANDOM_CANDIDATES}" = "array" ] && [ "${#ZSH_THEME_RANDOM_CANDIDATES[@]}" -gt 0 ]; then
+  themes=(${^ZSH_THEME_RANDOM_CANDIDATES})
   N=${#themes[@]}
   ((N=(RANDOM%N)+1))
-  RANDOM_THEME=${themes[$N]}
-  source "$RANDOM_THEME"
-  echo "[oh-my-zsh] Random theme '$RANDOM_THEME' loaded..."
-else
+  ZSH_THEME=${themes[$N]}
+  echo $ZSH_THEME
   if [ ! "$ZSH_THEME" = ""  ]; then
     if [ -f "$ZSH_CUSTOM/$ZSH_THEME.zsh-theme" ]; then
       source "$ZSH_CUSTOM/$ZSH_THEME.zsh-theme"
